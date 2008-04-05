@@ -1,6 +1,6 @@
 <?php
 
-# Copyright (c)  2007 - Marcus Lunzenauer <mlunzena@uos.de>
+# Copyright (c)  2008 - Marcus Lunzenauer <mlunzena@uos.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
