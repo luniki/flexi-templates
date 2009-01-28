@@ -43,7 +43,7 @@ class Flexi_JsTemplate extends Flexi_PhpTemplate {
     extract($this->_attributes);
 
     # get generator object
-    $update_page =& new Flexi_JavascriptGenerator();
+    $update_page = new Flexi_JavascriptGenerator();
 
     # include template, parse it and remove output
     ob_start();

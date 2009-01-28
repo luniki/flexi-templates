@@ -162,7 +162,7 @@ EXPECTED;
   }
 
   function test_jsgen() {
-    $page =& new Flexi_JavascriptGenerator();
+    $page = new Flexi_JavascriptGenerator();
     $page->insert_html('bottom', 'list', '<li>Last item</li>');
     $page->replace_html('person-45', 'Deleted.');
     $page->replace('person-45', 'Deleted.');

@@ -142,7 +142,7 @@ class Flexi_TemplateFactory {
         return $null;
     }
 
-    $template =& new $class($template, $this);
+    $template = new $class($template, $this);
 
     return $template;
   }
@@ -160,7 +160,7 @@ class Flexi_TemplateFactory {
    * @return string A string representing the rendered presentation.
    */
   function render($name, $attributes = null, $layout = null) {
-    $template =& $this->open($name);
+    $template = $this->open($name);
     return $template->render($attributes, $layout);
   }
 }

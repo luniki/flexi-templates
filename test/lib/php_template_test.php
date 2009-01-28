@@ -40,7 +40,7 @@ class PhpTemplateTestCase extends UnitTestCase {
 
 
   function setUp() {
-    $this->factory =& new Flexi_TemplateFactory(TEST_DIR . '/templates/template_tests');
+    $this->factory = new Flexi_TemplateFactory(TEST_DIR . '/templates/template_tests');
   }
 
 
@@ -49,7 +49,7 @@ class PhpTemplateTestCase extends UnitTestCase {
   }
 
   function test_render_partial() {
-    $template =& $this->factory->open('foo_using_partial');
+    $template = $this->factory->open('foo_using_partial');
     $template->set_attribute('whom', 'bar');
     $output = $template->render(array('when' => 'now'));
     $spec = "Hallo, <h1>bar at now</h1>\n!\n";
@@ -58,13 +58,13 @@ class PhpTemplateTestCase extends UnitTestCase {
 
 
   function test_render_partial_collection() {
-    $template =& $this->factory->open('foo_with_partial_collection');
+    $template = $this->factory->open('foo_with_partial_collection');
     var_dump($template->render_partial_collection('item', range(1, 5), 'spacer'));
   }
 
   function test_render_partial_with_a_template_object_instead_of_a_template_name() {
-    $template =& $this->factory->open('foo_using_partial');
-    $partial  =& $this->factory->open('foos_partial');
+    $template = $this->factory->open('foo_using_partial');
+    $partial  = $this->factory->open('foos_partial');
     $template->set_attribute('whom', 'bar');
 
     $output = $template->render(array('when' => 'now'));

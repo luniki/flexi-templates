@@ -28,7 +28,7 @@ class JsTemplateTestCase extends UnitTestCase {
   var $factory;
 
   function setUp() {
-    $this->factory =& new Flexi_TemplateFactory(TEST_DIR . '/templates/template_tests');
+    $this->factory = new Flexi_TemplateFactory(TEST_DIR . '/templates/template_tests');
   }
 
 

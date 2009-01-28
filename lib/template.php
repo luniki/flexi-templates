@@ -54,7 +54,7 @@ class Flexi_Template {
     $this->_template = $template;
 
     # set factory
-    $this->_factory =& $factory;
+    $this->_factory = $factory;
 
     # init attributes
     $this->clear_attributes();
@@ -245,6 +245,6 @@ class Flexi_Template {
    * @return void
    */
   function set_layout($layout) {
-    $this->_layout =& $this->_factory->open($layout);
+    $this->_layout = $this->_factory->open($layout);
   }
 }

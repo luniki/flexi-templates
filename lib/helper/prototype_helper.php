@@ -751,7 +751,7 @@ class Flexi_JavascriptGenerator {
   function javascript_object_for($object) {
     static $json;
     if (is_null($json)) {
-      $json =& new Services_JSON();
+      $json = new Services_JSON();
     }
     return $json->encode($object);
   }

@@ -86,7 +86,7 @@ class Flexi_PhpTemplate extends Flexi_Template {
   function render_partial_collection($partial, $collection,
                                      $spacer = NULL, $attributes = array()) {
 
-    $template =& $this->_factory->open($partial);
+    $template = $this->_factory->open($partial);
     $template->set_attributes($this->_attributes);
     $template->set_attributes($attributes);
 

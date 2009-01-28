@@ -30,13 +30,13 @@ require_once 'simpletest/collector.php';
 
 
 # collect all tests
-$all =& new GroupTest('All tests');
+$all = new GroupTest('All tests');
 
-$lib =& new GroupTest('lib tests');
+$lib = new GroupTest('lib tests');
 $lib->collect(dirname(__FILE__).'/lib', new SimplePatternCollector('/test.php$/'));
 $all->addTestCase($lib);
 
-$helper =& new GroupTest('helper tests');
+$helper = new GroupTest('helper tests');
 $helper->collect(dirname(__FILE__).'/lib/helper', new SimplePatternCollector('/test.php$/'));
 $all->addTestCase($helper);
 
