@@ -40,14 +40,14 @@ class Flexi_JsTemplate extends Flexi_PhpTemplate {
   function _render() {
 
     # put attributes into scope
-    extract($this->attributes);
+    extract($this->_attributes);
 
     # get generator object
     $update_page =& new Flexi_JavascriptGenerator();
 
     # include template, parse it and remove output
     ob_start();
-    require $this->template;
+    require $this->_template;
     ob_end_clean();
 
     return $update_page->to_s();

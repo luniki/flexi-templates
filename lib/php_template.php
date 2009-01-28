@@ -39,19 +39,19 @@ class Flexi_PhpTemplate extends Flexi_Template {
    */
   function _render() {
 
-    extract($this->attributes);
+    extract($this->_attributes);
 
     # include template, parse it and get output
     ob_start();
-    require $this->template;
+    require $this->_template;
     $content_for_layout = ob_get_clean();
 
 
     # include layout, parse it and get output
-    if (isset($this->layout)) {
+    if (isset($this->_layout)) {
       $defined = get_defined_vars();
       unset($defined['this']);
-      $content_for_layout = $this->layout->render($defined);
+      $content_for_layout = $this->_layout->render($defined);
     }
 
     return $content_for_layout;
@@ -68,7 +68,7 @@ class Flexi_PhpTemplate extends Flexi_Template {
    * @return string A string representing the rendered presentation.
    */
   function render_partial($partial, $attributes = array()) {
-    return $this->factory->render($partial, $attributes + $this->attributes);
+    return $this->_factory->render($partial, $attributes + $this->_attributes);
   }
 
 
@@ -86,8 +86,8 @@ class Flexi_PhpTemplate extends Flexi_Template {
   function render_partial_collection($partial, $collection,
                                      $spacer = NULL, $attributes = array()) {
 
-    $template =& $this->factory->open($partial);
-    $template->set_attributes($this->attributes);
+    $template =& $this->_factory->open($partial);
+    $template->set_attributes($this->_attributes);
     $template->set_attributes($attributes);
 
     $collected = array();

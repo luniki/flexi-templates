@@ -38,7 +38,7 @@ class Flexi_Template {
    * @ignore
    */
   var
-    $attributes, $factory, $layout, $template;
+    $_attributes, $_factory, $_layout, $_template;
 
 
   /**
@@ -51,10 +51,10 @@ class Flexi_Template {
   function Flexi_Template($template, &$factory) {
 
     # set template
-    $this->template = $template;
+    $this->_template = $template;
 
     # set factory
-    $this->factory =& $factory;
+    $this->_factory =& $factory;
 
     # init attributes
     $this->clear_attributes();
@@ -106,7 +106,7 @@ class Flexi_Template {
    * @return mixed  An attribute value.
    */
   function get_attribute($name) {
-    return isset($this->attributes[$name]) ? $this->attributes[$name] : NULL;
+    return isset($this->_attributes[$name]) ? $this->_attributes[$name] : NULL;
   }
 
 
@@ -117,7 +117,7 @@ class Flexi_Template {
    *               values.
    */
   function get_attributes() {
-    return $this->attributes;
+    return $this->_attributes;
   }
 
 
@@ -130,7 +130,7 @@ class Flexi_Template {
    * @return void
    */
   function set_attribute($name, $value) {
-    $this->attributes[$name] = $value;
+    $this->_attributes[$name] = $value;
   }
 
 
@@ -143,7 +143,7 @@ class Flexi_Template {
    * @return void
    */
   function set_attributes($attributes) {
-    $this->attributes = (array)$attributes + (array)$this->attributes;
+    $this->_attributes = (array)$attributes + (array)$this->_attributes;
   }
 
 
@@ -153,7 +153,7 @@ class Flexi_Template {
    * @return void
    */
   function clear_attributes() {
-    $this->attributes = array();
+    $this->_attributes = array();
   }
 
 
@@ -165,7 +165,7 @@ class Flexi_Template {
    * @return void
    */
   function clear_attribute($name) {
-    unset($this->attributes[$name]);
+    unset($this->_attributes[$name]);
   }
 
 
@@ -177,6 +177,6 @@ class Flexi_Template {
    * @return void
    */
   function set_layout($layout) {
-    $this->layout =& $this->factory->open($layout);
+    $this->_layout =& $this->_factory->open($layout);
   }
 }
