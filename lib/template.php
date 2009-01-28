@@ -65,6 +65,74 @@ class Flexi_Template {
 
 
   /**
+   * __set() is a magic method run when writing data to inaccessible members.
+   * In this class it is used to set attributes for the template in a
+   * comfortable way.
+   *
+   * @see http://php.net/__set
+   *
+   * @param  string     the name of the member field
+   * @param  mixed      the value for the member field
+   *
+   * @return void
+   */
+  function __set($name, $value) {
+    $this->set_attribute($name, $value);
+  }
+
+
+  /**
+   * __get() is a magic method utilized for reading data from inaccessible
+   * members.
+   * In this class it is used to get attributes for the template in a
+   * comfortable way.
+   *
+   * @see http://php.net/__set
+   *
+   * @param  string     the name of the member field
+   *
+   * @return mixed      the value for the member field
+   */
+  function __get($name) {
+    return $this->get_attribute($name);
+  }
+
+
+  /**
+   * __isset() is a magic method triggered by calling isset() or empty() on
+   * inaccessible members.
+   * In this class it is used to check for attributes for the template in a
+   * comfortable way.
+   *
+   * @see http://php.net/__set
+   *
+   * @param  string     the name of the member field
+   *
+   * @return bool       TRUE if that attribute exists, FALSE otherwise
+   */
+  function __isset($name) {
+    return isset($this->_attributes[$name]);
+  }
+
+
+  /**
+   * __unset() is a magic method invoked when unset() is used on inaccessible
+   * members.
+   * In this class it is used to check for attributes for the template in a
+   * comfortable way.
+   *
+   * @see http://php.net/__set
+   *
+   * @param  string     the name of the member field
+   *
+   * @return void
+   */
+  function __unset($name) {
+    $this->clear_attribute($name);
+  }
+
+
+  /**
    * Parse, render and return the presentation.
    *
    * @param array  An optional associative array of attributes and their

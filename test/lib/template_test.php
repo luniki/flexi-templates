@@ -24,6 +24,7 @@ require_once dirname(__FILE__) . '/../flexi_tests.php';
 Flexi_Tests::setup();
 
 Mock::generate('Flexi_TemplateFactory');
+Mock::generate('Flexi_Template');
 
 
 class AnEmptyTemplate extends UnitTestCase {
@@ -185,3 +186,76 @@ class ATemplate extends UnitTestCase {
 #     $this->assertEqual($foo_out, $bar_out);
 #   }
 }
+
+
+
+class MagicMethodsTemplate extends UnitTestCase {
+
+
+  var $factory;
+
+
+  function setUp() {
+    $this->factory = new MockFlexi_TemplateFactory(TEST_DIR . '/templates/template_tests');
+    $this->template = new Flexi_Template('foo', $this->factory);
+  }
+
+
+  function tearDown() {
+    unset($this->factory);
+    unset($this->template);
+  }
+
+
+  function test_should_set_an_attribute_using_the_magic_methods() {
+    $this->template->foo = 'bar';
+    $this->assertEqual('bar', $this->template->get_attribute('foo'));
+  }
+
+
+  function test_should_not_set_a_member_as_an_attribute() {
+    $this->template->_layout = 'bar';
+    $this->assertNull($this->template->get_attribute('_layout'));
+  }
+
+  function test_should_overwrite_an_attribute() {
+    $this->template->set_attribute('foo', 'bar');
+    $this->template->foo = 'baz';
+    $this->assertEqual('baz', $this->template->get_attribute('foo'));
+  }
+
+  function test_should_return_an_existing_attribute_using_the_magic_methods() {
+    $this->template->set_attribute('foo', 'bar');
+    $this->assertEqual('bar', $this->template->foo);
+  }
+
+
+  function test_should_return_null_for_a_non_existing_attribute_using_the_magic_methods() {
+    $this->assertNull($this->template->foo);
+  }
+
+
+  function test_should_unset_an_attribute_using_the_magic_methods() {
+    $this->template->foo = 'bar';
+    unset($this->template->foo);
+    $this->assertNull($this->template->foo);
+  }
+
+
+  function test_should_return_null_on_unsetting_a_non_attribute() {
+    unset($this->template->foo);
+    $this->assertNull($this->template->foo);
+  }
+
+
+  function test_should_return_true_on_isset_for_an_attribute() {
+    $this->template->foo = 'bar';
+    $this->assertTrue(isset($this->template->foo));
+  }
+
+
+  function test_should_return_false_on_isset_for_a_non_existing_attribute() {
+    $this->assertFalse(isset($this->template->foo));
+  }
+}
+
