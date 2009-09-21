@@ -112,7 +112,7 @@ EXPECTED;
   function test_update_element_function() {
     $foo = PrototypeHelper::update_element_function('element_id',
       array('position' => 'bottom', 'content' => "<p>New product!</p>"));
-    $exp = "new Insertion.Bottom('element_id','<p>New product!</p>');\n";
+    $exp = "new Insertion.Bottom('element_id','<p>New product!<\/p>');\n";
     $this->assertEqual($exp, $foo);
   }
 
