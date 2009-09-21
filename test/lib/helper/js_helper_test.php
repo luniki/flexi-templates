@@ -66,8 +66,17 @@ class JsHelperTestCase extends UnitTestCase {
   }
 
   function test_escape_javascript() {
-    $foo = JsHelper::escape_javascript("\r\n\n\r\"\\'");
-    $this->assertEqual('\\n\\n\\n\\"\\\\\'', $foo);
+    $strings = array(
+    "\r" => '\n',
+    "\n" => '\n',
+    '\\' => '\\\\',
+    '</' => '<\\/',
+    '"'  => '\\"',
+    "'"  => "\\'"
+    );
+    foreach ($strings as $string => $expect) {
+      $this->assertEqual(JsHelper::escape_javascript($string), $expect);
+    }
   }
 
   function test_javascript_tag() {
