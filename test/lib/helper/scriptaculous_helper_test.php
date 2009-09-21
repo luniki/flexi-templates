@@ -43,7 +43,7 @@ class ScriptaculousHelperTestCase extends UnitTestCase {
   function tearDown() {
   }
 
-  function test_sortable_element() {
-    var_dump(ScriptaculousHelper::sortable_element('list', array('url' => '/')));
-  }
+#  function test_sortable_element() {
+#    var_dump(ScriptaculousHelper::sortable_element('list', array('url' => '/')));
+#  }
 }
