@@ -134,57 +134,6 @@ class ATemplate extends UnitTestCase {
     $template->clear_attributes();
     $this->assertEqual(0, sizeof($template->get_attributes()));
   }
-
-
-#   function test_should_override_attributes_with_those_passed_to_render() {
-
-#     $t = $this->factory->open('attributes');
-#     $t->set_attribute('foo',  'baz');
-
-#     $t->render(array('foo' => 'bar'));
-
-#     $bar = $t->get_attribute('foo');
-#     $this->assertEqual($bar, 'bar');
-
-#     $out = $t->render();
-
-#     $bar = $t->get_attribute('foo');
-#     $this->assertEqual($bar, 'bar');
-#   }
-
-#   function test_render_without_layout() {
-#     $foo = $this->factory->open('foo');
-#     $foo->set_attribute('whom', 'bar');
-#     $out = $foo->render();
-#     $this->assertEqual('Hallo, bar!', $out);
-#   }
-
-#   function test_render_with_layout() {
-#     $foo = $this->factory->open('foo');
-#     $foo->set_attribute('whom', 'bar');
-#     $foo->set_layout('layouts/layout');
-#     $out = $foo->render();
-#     $this->assertEqual('[Hallo, bar!]', $out);
-#   }
-
-#   function test_render_with_missing_layout() {
-#     $foo = $this->factory->open('foo');
-
-#     $this->expectError(new PatternExpectation('/Could not find template/'));
-#     $foo->set_layout('layouts/nosuchlayout');
-#   }
-
-#   function test_render_with_attributes() {
-#     $foo = $this->factory->open('foo');
-#     $foo->set_attribute('whom', 'bar');
-#     $foo->set_layout('layouts/layout');
-#     $foo_out = $foo->render();
-
-#     $bar = $this->factory->open('foo');
-#     $bar_out = $bar->render(array('whom' => 'bar'), 'layouts/layout');
-
-#     $this->assertEqual($foo_out, $bar_out);
-#   }
 }
 
 

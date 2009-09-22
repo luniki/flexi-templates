@@ -39,11 +39,24 @@ class TemplateFactoryTestCase extends UnitTestCase {
   var $factory;
 
   function setUp() {
-    $this->factory = new Flexi_TemplateFactory(TEST_DIR . '/templates/factory_tests');
+    $this->setUpFS();
+    $this->factory = new Flexi_TemplateFactory('var://templates');
   }
 
   function tearDown() {
     unset($this->factory);
+    stream_wrapper_unregister("var");
+  }
+
+  function setUpFS() {
+    ArrayFileStream::set_filesystem(array(
+      'templates' => array(
+        'foo.php'     => 'some content',
+        'baz.unknown' => 'some content',
+      )
+    ));
+    stream_wrapper_register("var", "ArrayFileStream")
+      or die("Failed to register protocol");
   }
 
   function test_should_create_factory() {
@@ -52,7 +65,7 @@ class TemplateFactoryTestCase extends UnitTestCase {
   }
 
   function test_should_create_factory_using_path() {
-    $path = TEST_DIR . '/templates/factory_tests';
+    $path = 'var://';
     $factory = new Flexi_TemplateFactory($path);
     $this->assertNotNull($factory);
   }
@@ -63,31 +76,27 @@ class TemplateFactoryTestCase extends UnitTestCase {
   }
 
   function test_should_open_template_using_absolute_path() {
-    $foo = $this->factory->open(TEST_DIR . '/templates/factory_tests/foo');
+    $foo = $this->factory->open('var://templates/foo');
     $this->assertNotNull($foo);
   }
 
-  function test_should_raise_a_warning_trying_to_open_a_missing_template() {
-    $this->expectError(new PatternExpectation('/Could not find template/'));
+  function test_should_throw_an_exception_opening_a_missing_template_without_file_extension() {
+    $this->expectException('Flexi_TemplateNotFoundException');
     $bar = $this->factory->open('bar');
-    $this->assertNull($bar);
+  }
+
+  function test_should_throw_an_exception_opening_a_missing_template_with_file_extension() {
+    $this->expectException('Flexi_TemplateNotFoundException');
+    $bar = $this->factory->open('bar.php');
   }
 
   function test_should_open_template_using_extension() {
     $foo = $this->factory->open('foo.php');
-    $this->assertNotNull($foo);
     $this->assertIsA($foo, 'Flexi_PhpTemplate');
   }
 
-  function test_should_raise_an_error_when_opening_a_template_with_unknown_extension() {
-    $this->expectError(new PatternExpectation('/Could not find class/'));
+  function test_should_throw_an_exception_when_opening_a_template_with_unknown_extension() {
+    $this->expectException(Flexi_TemplateClassNotFoundException);
     $baz = $this->factory->open('baz');
-    $this->assertNull($baz);
-  }
-
-  function test_should_render_template() {
-    $template = $this->factory->open('foo');
-    $out = $template->render(array('whom' => 'bar'));
-    $this->assertEqual('Hallo, bar!', $out);
   }
 }

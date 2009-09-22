@@ -89,6 +89,8 @@ class Flexi_TemplateFactory {
    * method returns it's parameter, if it is not a string. This functionality is
    * useful for helper methods like #render_partial
    *
+   * TODO
+   *
    * @param string A name of a template.
    *
    * @return mixed the factored object
@@ -100,30 +102,24 @@ class Flexi_TemplateFactory {
     }
 
     # if it starts with a slash, it's an absolute path
-    $template = $template0[0] != '/'
-                ? $this->get_path() . $template0
-                : $template0;
+    $template = $this->get_absolute_path($template0);
 
     $matches = array();
     $matched = ereg('\.([^/.]+)$', $template, $matches);
 
     # no extension defined, find it
     if ($matched === FALSE) {
-
-      # find templates matching pattern
-      $files = glob($template . '.*');
-
-      # no such template
-      if (0 == sizeof($files)) {
-        trigger_error(sprintf('Could not find template: "%s" (searching "%s").',
-                              $template0, $this->get_path()),
-                      E_USER_WARNING);
-        $null = NULL;
-        return $null;
+      $template = $this->find_template($template);
+      if ($template === NULL) {
+        throw new Flexi_TemplateNotFoundException(
+          sprintf('Could not find template: "%s".', $template0));
       }
-
-      $template = current($files);
       ereg('\.([^/.]+)$', $template, $matches);
+    }
+
+    else if (!file_exists($template)) {
+        throw new Flexi_TemplateNotFoundException(
+          sprintf('Could not find template: "%s".', $template));
     }
 
     switch ($matches[1]) {
@@ -135,16 +131,55 @@ class Flexi_TemplateFactory {
         $class = 'Flexi_JsTemplate'; break;
 
       default:
-        trigger_error(sprintf('Could not find class of "%s": "%s".',
-                              $template, $matches[1]),
-                      E_USER_ERROR);
-        $null = NULL;
-        return $null;
+        throw new Flexi_TemplateClassNotFoundException(
+          sprintf('Could not find class of "%s": "%s".',
+                  $template, $matches[1]));
     }
 
     $template = new $class($template, $this);
 
     return $template;
+  }
+
+
+  function get_absolute_path($template0) {
+    return preg_match('#^(/|\w+://)#', $template0)
+           ? $template0
+           : $this->get_path() . $template0;
+  }
+
+
+  /**
+   * Find template given w/o extension.
+   *
+   * @param  string     the template's filename w/o extension
+   *
+   * @return mixed      NULL if there no such file could be found, a string
+   *                    containing the complete file name otherwise
+   */
+  function find_template($template) {
+
+    $file = basename($template);
+    $dir = substr($template, 0, strlen($template) - strlen($file) - 1);
+    $file .= '.';
+    $len = strlen($file);
+
+    if (!is_dir($dir)) {
+      return NULL;
+    }
+
+    $handle = opendir($dir);
+    if (!$handle) {
+      return NULL;
+    }
+
+    while(($name = readdir($handle)) !== FALSE) {
+      if (!strncmp($name, $file, $len)) {
+        return $dir . '/' . $name;
+      }
+    }
+    closedir($handle);
+    return NULL;
   }
 
 

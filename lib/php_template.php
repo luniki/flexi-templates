@@ -91,7 +91,7 @@ class Flexi_PhpTemplate extends Flexi_Template {
     $template->set_attributes($attributes);
 
     $collected = array();
-    $iterator_name = array_pop(explode('/', $partial));
+    $iterator_name = pathinfo($partial, PATHINFO_FILENAME);
     foreach ($collection as $element)
       $collected[] = $template->render(array($iterator_name => $element));
 

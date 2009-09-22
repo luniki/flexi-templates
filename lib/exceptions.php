@@ -1,6 +1,6 @@
 <?php
 
-# Copyright (c)  2008 - Marcus Lunzenauer <mlunzena@uos.de>
+# Copyright (c)  2009 - Marcus Lunzenauer <mlunzena@uos.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-define('FLEXI_VERSION', '0.3.0');
+class Flexi_TemplateNotFoundException extends Exception {}
 
-/**
- * Bootstrapping file for flexi. Just include this to get going.
- *
- * @package   flexi
- */
-
-require_once 'exceptions.php';
-require_once 'template.php';
-require_once 'template_factory.php';
-require_once 'php_template.php';
-require_once 'js_template.php';
-
-require_once 'helper/js_helper.php';
-require_once 'helper/json.php';
-require_once 'helper/prototype_helper.php';
-require_once 'helper/scriptaculous_helper.php';
-require_once 'helper/tag_helper.php';
-require_once 'helper/text_helper.php';
-
+class Flexi_TemplateClassNotFoundException extends Exception {}
