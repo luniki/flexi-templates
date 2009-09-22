@@ -207,6 +207,7 @@ class ArrayFileStream {
   }
 
   function dir_closedir() {
+    reset($this->open_file);
     unset($this->open_file);
   }
 }

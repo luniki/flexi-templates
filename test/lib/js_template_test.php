@@ -28,17 +28,29 @@ class JsTemplateTestCase extends UnitTestCase {
   var $factory;
 
   function setUp() {
-    $this->factory = new Flexi_TemplateFactory(TEST_DIR . '/templates/template_tests');
+    $this->setUpFS();
+    $this->factory = new Flexi_TemplateFactory('var://templates/');
   }
-
 
   function tearDown() {
     unset($this->factory);
+
+    stream_wrapper_unregister("var");
   }
+
+  function setUpFS() {
+    ArrayFileStream::set_filesystem(array(
+      'templates' => array(
+        'foo.pjs' => '',
+        'layout.pjs' => ''
+      )));
+    stream_wrapper_register("var", "ArrayFileStream") or die("Failed to register protocol");
+  }
+
 
   function test_something() {
     $template = $this->factory->open('foo');
-    $template->render(array('whom' => 'world'), 'layouts/layout');
+    $template->render(array('whom' => 'world'), 'layout');
   }
 }
 
