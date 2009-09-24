@@ -99,4 +99,9 @@ class TemplateFactoryTestCase extends UnitTestCase {
     $this->expectException(Flexi_TemplateClassNotFoundException);
     $baz = $this->factory->open('baz');
   }
+
+  function test_should_throw_an_exception_opening_a_template_in_a_non_existing_directory() {
+    $this->expectException(Flexi_TemplateNotFoundException);
+    $this->factory->open('doesnotexist/foo');
+  }
 }
