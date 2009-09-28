@@ -57,4 +57,9 @@ class TagHelperTestCase extends UnitTestCase {
     $foo = TagHelper::cdata_section('foo');
     $this->assertEqual('<![CDATA[foo]]>', $foo);
   }
+
+  function test_string_to_array() {
+    $array = TagHelper::string_to_array('id="anId" class=\'aClass\'');
+    $this->assertEqual(array('id' => 'anId', 'class' => 'aClass'), $array);
+  }
 }

@@ -24,8 +24,7 @@ require_once dirname(__FILE__) . '/../flexi_tests.php';
 Flexi_Tests::setup();
 
 Mock::generate('Flexi_TemplateFactory');
-Mock::generate('Flexi_Template');
-
+Mock::generatePartial('Flexi_Template', 'MockTemplate', array('_render'));
 
 class AnEmptyTemplate extends UnitTestCase {
 
@@ -35,7 +34,9 @@ class AnEmptyTemplate extends UnitTestCase {
 
   function setUp() {
     $this->factory = new MockFlexi_TemplateFactory(TEST_DIR . '/templates/template_tests');
-    $this->factory->setReturnValue('open', new Flexi_Template('foo', $this->factory));
+    $template = new MockTemplate();
+    $template->__construct('foo', $this->factory);
+    $this->factory->setReturnValue('open', $template);
   }
 
 
@@ -77,7 +78,9 @@ class ATemplate extends UnitTestCase {
 
   function setUp() {
     $this->factory = new MockFlexi_TemplateFactory(TEST_DIR . '/templates/template_tests');
-    $this->factory->setReturnValue('open', new Flexi_Template('foo', $this->factory));
+    $template = new MockTemplate();
+    $template->__construct('foo', $this->factory);
+    $this->factory->setReturnValue('open', $template);
   }
 
 
@@ -146,7 +149,8 @@ class MagicMethodsTemplate extends UnitTestCase {
 
   function setUp() {
     $this->factory = new MockFlexi_TemplateFactory(TEST_DIR . '/templates/template_tests');
-    $this->template = new Flexi_Template('foo', $this->factory);
+    $this->template = new MockTemplate();
+    $this->template->__construct('foo', $this->factory);
   }
 
 
@@ -162,9 +166,10 @@ class MagicMethodsTemplate extends UnitTestCase {
   }
 
 
-  function test_should_not_set_a_member_as_an_attribute() {
+  function test_should_not_set_a_protected_member_field_as_an_attribute() {
     $this->template->_layout = 'bar';
     $this->assertNull($this->template->get_attribute('_layout'));
+    $this->assertEqual('bar', $this->template->_layout);
   }
 
   function test_should_overwrite_an_attribute() {

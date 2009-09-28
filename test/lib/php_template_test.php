@@ -122,6 +122,11 @@ class PhpTemplateTestCase extends UnitTestCase {
      $this->assertEqual('[Hello, bar!]', $out);
    }
 
+   function test_render_with_layout_inline() {
+     $out = $this->factory->render('foo', array('whom' => 'bar'), 'layout');
+     $this->assertEqual('[Hello, bar!]', $out);
+   }
+
    function test_render_with_missing_layout() {
      $foo = $this->factory->open('foo');
      $this->expectException("Flexi_TemplateNotFoundException");

@@ -132,14 +132,4 @@ class JsHelper {
 
     return '{'.join(', ', $opts).'}';
   }
-
-  /**
-   * @ignore
-   */
-  function array_or_string_for_javascript($option) {
-    if (is_array($option))
-      return "['".join("','", $option)."']";
-    else if ($option)
-      return "'$option'";
-  }
 }

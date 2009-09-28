@@ -32,12 +32,12 @@
  * @version   $Id$
  */
 
-class Flexi_Template {
+abstract class Flexi_Template {
 
   /**
    * @ignore
    */
-  var
+  public
     $_attributes, $_factory, $_layout, $_template;
 
 
@@ -48,7 +48,7 @@ class Flexi_Template {
    *
    * @return void
    */
-  function Flexi_Template($template, &$factory) {
+  function __construct($template, &$factory) {
 
     # set template
     $this->_template = $template;
@@ -143,8 +143,9 @@ class Flexi_Template {
    */
   function render($attributes = null, $layout = null) {
 
-    if ($layout)
+    if (isset($layout)) {
       $this->set_layout($layout);
+    }
 
     # merge attributes
     $this->set_attributes($attributes);
@@ -153,16 +154,12 @@ class Flexi_Template {
   }
 
 
-
   /**
    * Parse, render and return the presentation.
    *
    * @return string A string representing the rendered presentation.
    */
-  function _render() {
-    trigger_error('Flexi_Template::render() must be overridden', E_USER_ERROR);
-    exit;
-  }
+  abstract function _render();
 
 
   /**

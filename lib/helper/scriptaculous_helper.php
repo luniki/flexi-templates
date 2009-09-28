@@ -69,7 +69,7 @@ class ScriptaculousHelper {
       case 'toggle_appear':
       case 'toggle_blind':
       case 'toggle_slide':
-        return sprintf("new Effect.toggle(%s, %s, %s)",
+        return sprintf("new Effect.toggle(%s, '%s', %s)",
                        $element, substr($name, 7),
                        JsHelper::options_for_javascript($js_opt));
     }
@@ -116,16 +116,28 @@ class ScriptaculousHelper {
         $options[$option] = "'{$options[$option]}'";
 
     if (isset($options['containment']))
-      $options['containment'] = JsHelper::array_or_string_for_javascript($options['containment']);
+      $options['containment'] = self::array_or_string_for_javascript($options['containment']);
 
     if (isset($options['hoverclass']))
       $options['hoverclass'] = "'{$options['hoverclass']}'";
 
     if (isset($options['only']))
-      $options['only'] = JsHelper::array_or_string_for_javascript($options['only']);
+      $options['only'] = self::array_or_string_for_javascript($options['only']);
 
     return JsHelper::javascript_tag(
       sprintf("Sortable.create('%s', %s)",
               $element_id, JsHelper::options_for_javascript($options)));
+  }
+
+
+  /**
+   * @ignore
+   */
+  function array_or_string_for_javascript($option) {
+    if (is_array($option)) {
+      return "['".join("','", $option)."']";
+    } else if ($option) {
+      return "'$option'";
+    }
   }
 }

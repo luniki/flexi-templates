@@ -119,44 +119,4 @@ class TagHelper {
 
     return $attributes;
   }
-
-  /**
-   * @ignore
-   */
-  function _convert_options($opt) {
-    $opt = TagHelper::_parse_attributes($opt);
-
-    foreach (array('disabled', 'readonly', 'multiple') as $attribute)
-      $opt = TagHelper::_boolean_attribute($opt, $attribute);
-
-    return $opt;
-  }
-
-  /**
-   * @ignore
-   */
-  function _boolean_attribute($opt, $attribute) {
-    if (array_key_exists($attribute, $opt)) {
-      if ($opt[$attribute])
-        $opt[$attribute] = $attribute;
-      else
-        unset($opt[$attribute]);
-    }
-
-    return $opt;
-  }
-
-  /**
-   * @ignore
-   */
-  function _get_option(&$options, $name, $default = NULL) {
-    if (isset($options[$name])) {
-      $value = $options[$name];
-      unset($options[$name]);
-    } else {
-      $value = $default;
-    }
-
-    return $value;
-  }
 }

@@ -43,7 +43,25 @@ class ScriptaculousHelperTestCase extends UnitTestCase {
   function tearDown() {
   }
 
-#  function test_sortable_element() {
-#    var_dump(ScriptaculousHelper::sortable_element('list', array('url' => '/')));
-#  }
+  function test_visual_effect() {
+    $result = ScriptaculousHelper::visual_effect('toggle_blind', 'id');
+    $expected = 'new Effect.toggle(\'id\', \'blind\', {})';
+    $this->assertEqual($result, $expected);
+  }
+
+  function test_sortable_element() {
+    $result = ScriptaculousHelper::sortable_element('list', array(
+      'url'         => '/',
+      'containment' => array('left', 'right'),
+      'only'        => 'middle',
+    ));
+    $expected = <<<SCRIPT
+<script type="text/javascript">
+//<![CDATA[
+Sortable.create('list', {containment:['left','right'], onUpdate:function(){new Ajax.Request('/', {asynchronous:true, evalScripts:false, parameters:Sortable.serialize('list')})}, only:'middle'})
+//]]>
+</script>
+SCRIPT;
+    $this->assertEqual($result, $expected);
+  }
 }
