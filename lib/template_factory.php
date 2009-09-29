@@ -36,10 +36,9 @@ class Flexi_TemplateFactory {
   /**
    * include path for templates
    *
-   * @access private
    * @var string
    */
-  var $path;
+  protected $path;
 
 
   /**
@@ -85,17 +84,43 @@ class Flexi_TemplateFactory {
 
 
   /**
-   * Open a template of the given name using the factory method pattern. This
-   * method returns it's parameter, if it is not a string. This functionality is
-   * useful for helper methods like #render_partial
+   * Open a template of the given name using the factory method pattern.
+   * If a string was given, the path of the factory is searched for a matching
+   * template.
+   * If this string starts with a slash or with /\w+:\/\//, the string is
+   * interpreted as an absolute path. Otherwise the path of the factory will be
+   * prepended.
+   * After that the factory searches for a file extension in this string. If
+   * there is none, the directory where the template is supposed to live is
+   * searched for a file starting with the template string and a supported
+   * file extension.
+   * At last the factory instantiates a template object of the matching template
+   * class.
    *
-   * TODO
+   * Examples:
+   *
+   *   $factory->open('/path/to/template')
+   *     does not prepend the factory's path but searches for "template.*" in
+   *     "/path/to"
+   *
+   *   $factory->open('template')
+   *     prepends the factory's path and searches there for "template.*"
+   *
+   *  $factory->open('template.php')
+   *     prepends the factory's path but does not search and instantiates a
+   *     PHPTemplate instead
+   *
+   * This method returns it's parameter, if it is not a string. This
+   * functionality is useful for helper methods like #render_partial
+   *
+   * @throws Flexi_TemplateNotFoundException
+   * @throws Flexi_TemplateClassNotFoundException
    *
    * @param string A name of a template.
    *
    * @return mixed the factored object
    */
-  function &open($template0) {
+  function open($template0) {
 
     if (!is_string($template0)) {
       return $template0;
@@ -142,6 +167,14 @@ class Flexi_TemplateFactory {
   }
 
 
+  /**
+   * Returns the absolute path to the template. If the given argument starts
+   * with a slash or with a protocoll, this method just returns its arguments.
+   *
+   * @param  string     an incomplete template name
+   *
+   * @return string     an absolute path to the incomplete template name
+   */
   function get_absolute_path($template0) {
     return preg_match('#^(/|\w+://)#', $template0)
            ? $template0
@@ -195,7 +228,6 @@ class Flexi_TemplateFactory {
    * @return string A string representing the rendered presentation.
    */
   function render($name, $attributes = null, $layout = null) {
-    $template = $this->open($name);
-    return $template->render($attributes, $layout);
+    return $this->open($name)->render($attributes, $layout);
   }
 }
