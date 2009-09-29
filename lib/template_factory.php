@@ -48,7 +48,7 @@ class Flexi_TemplateFactory {
    *
    * @return void
    */
-  function Flexi_TemplateFactory($path) {
+  function __construct($path) {
     $this->set_path($path);
   }
 
@@ -120,43 +120,69 @@ class Flexi_TemplateFactory {
    *
    * @return mixed the factored object
    */
-  function open($template0) {
+  function open($template) {
 
-    if (!is_string($template0)) {
-      return $template0;
+    # if it is not a string, this method behaves like identity
+    if (!is_string($template)) {
+      return $template;
     }
 
-    # if it starts with a slash, it's an absolute path
-    $template = $this->get_absolute_path($template0);
-
-    $matches = array();
-    $matched = ereg('\.([^/.]+)$', $template, $matches);
-
-    # no extension defined, find it
-    if ($matched === FALSE) {
-      $template = $this->find_template($template);
-      if ($template === NULL) {
-        throw new Flexi_TemplateNotFoundException(
-          sprintf('Could not find template: "%s".', $template0));
-      }
-      ereg('\.([^/.]+)$', $template, $matches);
-    }
-
-    else if (!file_exists($template)) {
-        throw new Flexi_TemplateNotFoundException(
+    # get file
+    $file = $this->get_template_file($template);
+    if ($file === NULL) {
+      throw new Flexi_TemplateNotFoundException(
           sprintf('Could not find template: "%s".', $template));
     }
 
-    $class = $this->get_template_class($matches[1]);
-    if (!$class) {
+    # retrieve class
+    $class = $this->get_template_class($file);
+    if ($class === NULL) {
         throw new Flexi_TemplateClassNotFoundException(
-          sprintf('Could not find class of "%s": "%s".',
-                  $template, $file));
+          sprintf('Could not find class of "%s"', $template));
     }
 
-    $template = new $class($template, $this);
+    return new $class($file, $this);
+  }
 
-    return $template;
+
+  /**
+   * This method returns the absolute filename of the template
+   *
+   * @param  string     a template string
+   *
+   * @return mixed      an absolute filename or NULL if the template could not
+   *                    be found
+   */
+  function get_template_file($template) {
+
+    $template = $this->get_absolute_path($template);
+
+    # no extension defined, find it
+    if ($this->get_extension($template) === NULL) {
+      return $this->find_template($template);
+    }
+
+    return file_exists($template) ? $template : NULL;
+  }
+
+
+  /**
+   * Matches an extension to a template class.
+   *
+   * @param  string     the template
+   *
+   * @return string     a string containing the class name of a matched
+   *                    extension or NULL if the extension did not match
+   */
+  function get_template_class($template) {
+
+    $classes = array(
+      'php' => 'Flexi_PhpTemplate',
+      'pjs' => 'Flexi_JsTemplate'
+    );
+
+    $extension = $this->get_extension($template);
+    return isset($classes[$extension]) ? $classes[$extension] : NULL;
   }
 
 
@@ -168,10 +194,10 @@ class Flexi_TemplateFactory {
    *
    * @return string     an absolute path to the incomplete template name
    */
-  function get_absolute_path($template0) {
-    return preg_match('#^(/|\w+://)#', $template0)
-           ? $template0
-           : $this->get_path() . $template0;
+  function get_absolute_path($template) {
+    return preg_match('#^(/|\w+://)#', $template)
+           ? $template
+           : $this->get_path() . $template;
   }
 
 
@@ -210,21 +236,17 @@ class Flexi_TemplateFactory {
 
 
   /**
-   * Matches an extension to a template class.
+   * Returns the file extension if there is one.
    *
-   * @param  string     the extension to match
+   * @param  string     an possibly incomplete template file name
    *
-   * @return string     a string containing the class name of a matched
-   *                    extension or NULL if the extension did not match
+   * @return mixed      a string containing the file extension if there is one,
+   *                    NULL otherwise
    */
-  function get_template_class($extension) {
-
-    $classes = array(
-      'php' => 'Flexi_PhpTemplate',
-      'pjs' => 'Flexi_JsTemplate'
-    );
-
-    return isset($classes[$extension]) ? $classes[$extension] : NULL;
+  function get_extension($file) {
+    $matches = array();
+    $matched = ereg('\.([^/.]+)$', $file, $matches);
+    return $matched ? $matches[1] : NULL;
   }
 
 
