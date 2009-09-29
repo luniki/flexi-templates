@@ -147,18 +147,11 @@ class Flexi_TemplateFactory {
           sprintf('Could not find template: "%s".', $template));
     }
 
-    switch ($matches[1]) {
-
-      case 'php':
-        $class = 'Flexi_PhpTemplate'; break;
-
-      case 'pjs':
-        $class = 'Flexi_JsTemplate'; break;
-
-      default:
+    $class = $this->get_template_class($matches[1]);
+    if (!$class) {
         throw new Flexi_TemplateClassNotFoundException(
           sprintf('Could not find class of "%s": "%s".',
-                  $template, $matches[1]));
+                  $template, $file));
     }
 
     $template = new $class($template, $this);
@@ -213,6 +206,25 @@ class Flexi_TemplateFactory {
     }
     closedir($handle);
     return NULL;
+  }
+
+
+  /**
+   * Matches an extension to a template class.
+   *
+   * @param  string     the extension to match
+   *
+   * @return string     a string containing the class name of a matched
+   *                    extension or NULL if the extension did not match
+   */
+  function get_template_class($extension) {
+
+    $classes = array(
+      'php' => 'Flexi_PhpTemplate',
+      'pjs' => 'Flexi_JsTemplate'
+    );
+
+    return isset($classes[$extension]) ? $classes[$extension] : NULL;
   }
 
 
