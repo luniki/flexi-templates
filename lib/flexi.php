@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-define('FLEXI_VERSION', '0.3.0');
+define('FLEXI_VERSION', '0.4.0');
 
 /**
  * Bootstrapping file for flexi. Just include this to get going.
