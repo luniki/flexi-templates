@@ -701,7 +701,7 @@ class Flexi_JavascriptGenerator {
   /**
    * Executes the given javascript after a delay of 'seconds'.
    *
-   * @todo
+   * # TODO (mlunzena) this function has side effects and has to be explained or deleted
    *
    * @param type <description>
    *

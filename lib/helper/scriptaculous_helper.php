@@ -75,7 +75,6 @@ class ScriptaculousHelper {
     }
 
     return sprintf("new Effect.%s(%s, %s)",
-                   # TODO
                    TextHelper::camelize($name),
                    $element, JsHelper::options_for_javascript($js_opt));
   }

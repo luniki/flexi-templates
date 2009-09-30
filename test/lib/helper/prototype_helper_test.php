@@ -174,7 +174,7 @@ EXPECTED;
     $page->redirect_to('http://www.google.com');
     $page->delay('alert("Hallo Welt")', 23);
     $page->visual_effect('highlight', 'id-42');
-    # TODO
+    # TODO (mlunzena) no asserts
     # var_dump($page->to_s());
   }
 }

@@ -73,7 +73,24 @@ class Flexi_PhpTemplate extends Flexi_Template {
 
 
   /**
-   * TODO
+   * Renders a partial template with every member of a collection. This member
+   * can be accessed by a template variable with the same name as the name of
+   * the partial template.
+   *
+   * Example:
+   *
+   *   # template entry.php contains:
+   *   <li><?= $entry ?></li>
+   *
+   *
+   *   $entries = array('lorem', 'ipsum');
+   *   $template->render_partial_collection('entry', $entries);
+   *
+   *   # results in:
+   *   <li>lorem</li>
+   *   <li>ipsum</li>
+   *
+   * TODO (mlunzena) spacer and attributes must be described
    *
    * @param string A name of a partial template.
    * @param array  The collection to be rendered.
