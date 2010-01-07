@@ -53,6 +53,11 @@ class TemplateFactoryTestCase extends UnitTestCase {
       'templates' => array(
         'foo.php'     => 'some content',
         'baz.unknown' => 'some content',
+        'multiplebasenames' => array(
+          'foo.txt' => 'there is no matching template class',
+          'foo.php' => 'some content',
+          'bar.txt' => 'there is no matching template class'
+        )
       )
     ));
     stream_wrapper_register("var", "ArrayFileStream")
@@ -96,12 +101,17 @@ class TemplateFactoryTestCase extends UnitTestCase {
   }
 
   function test_should_throw_an_exception_when_opening_a_template_with_unknown_extension() {
-    $this->expectException(Flexi_TemplateClassNotFoundException);
+    $this->expectException(Flexi_TemplateNotFoundException);
     $baz = $this->factory->open('baz');
   }
 
   function test_should_throw_an_exception_opening_a_template_in_a_non_existing_directory() {
     $this->expectException(Flexi_TemplateNotFoundException);
     $this->factory->open('doesnotexist/foo');
+  }
+
+  function test_should_search_for_a_supported_template() {
+    $template = $this->factory->open('multiplebasenames/foo');
+    $this->assertIsA($template, 'Flexi_PhpTemplate');
   }
 }

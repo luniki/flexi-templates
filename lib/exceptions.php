@@ -22,4 +22,3 @@
 
 class Flexi_TemplateNotFoundException extends Exception {}
 
-class Flexi_TemplateClassNotFoundException extends Exception {}

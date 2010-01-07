@@ -42,6 +42,15 @@ class Flexi_TemplateFactory {
 
 
   /**
+   * mapping of file extensions to supported template classes
+   *
+   * @var array
+   */
+  protected $classes = array('php' => 'Flexi_PhpTemplate',
+                             'pjs' => 'Flexi_JsTemplate');
+
+
+  /**
    * Constructor of TemplateFactory.
    *
    * @param string the template include path
@@ -114,11 +123,12 @@ class Flexi_TemplateFactory {
    * functionality is useful for helper methods like #render_partial
    *
    * @throws Flexi_TemplateNotFoundException
-   * @throws Flexi_TemplateClassNotFoundException
    *
    * @param string A name of a template.
    *
    * @return mixed the factored object
+   *
+   * @throws Flexi_TemplateNotFoundException  if the template could not be found
    */
   function open($template) {
 
@@ -129,17 +139,9 @@ class Flexi_TemplateFactory {
 
     # get file
     $file = $this->get_template_file($template);
-    if ($file === NULL) {
-      throw new Flexi_TemplateNotFoundException(
-          sprintf('Could not find template: "%s".', $template));
-    }
 
     # retrieve class
     $class = $this->get_template_class($file);
-    if ($class === NULL) {
-        throw new Flexi_TemplateClassNotFoundException(
-          sprintf('Could not find class of "%s"', $template));
-    }
 
     return new $class($file, $this);
   }
@@ -150,19 +152,33 @@ class Flexi_TemplateFactory {
    *
    * @param  string     a template string
    *
-   * @return mixed      an absolute filename or NULL if the template could not
-   *                    be found
+   * @return string     an absolute filename
+   *
+   * @throws Flexi_TemplateNotFoundException  if the template could not be found
    */
-  function get_template_file($template) {
+  function get_template_file($template0) {
 
-    $template = $this->get_absolute_path($template);
+    $template = $this->get_absolute_path($template0);
+    $extension = $this->get_extension($template);
 
-    # no extension defined, find it
-    if ($this->get_extension($template) === NULL) {
-      return $this->find_template($template);
+    # extension defined, is there a matching template class?
+    if ($extension !== NULL) {
+      if (file_exists($template)) {
+        return $template;
+      }
     }
 
-    return file_exists($template) ? $template : NULL;
+    # no extension defined, find it
+    else {
+      $file = $this->find_template($template);
+      if ($file !== NULL) {
+        return $file;
+      }
+    }
+
+    # falling through to throw exception
+    throw new Flexi_TemplateNotFoundException(
+      sprintf('Missing template "%s" in "%s".', $template0, $this->path));
   }
 
 
@@ -175,14 +191,10 @@ class Flexi_TemplateFactory {
    *                    extension or NULL if the extension did not match
    */
   function get_template_class($template) {
-
-    $classes = array(
-      'php' => 'Flexi_PhpTemplate',
-      'pjs' => 'Flexi_JsTemplate'
-    );
-
     $extension = $this->get_extension($template);
-    return isset($classes[$extension]) ? $classes[$extension] : NULL;
+    return isset($this->classes[$extension])
+           ? $this->classes[$extension]
+           : NULL;
   }
 
 
@@ -210,27 +222,12 @@ class Flexi_TemplateFactory {
    *                    containing the complete file name otherwise
    */
   function find_template($template) {
-
-    $file = basename($template);
-    $dir = substr($template, 0, strlen($template) - strlen($file) - 1);
-    $file .= '.';
-    $len = strlen($file);
-
-    if (!is_dir($dir)) {
-      return NULL;
-    }
-
-    $handle = opendir($dir);
-    if (!$handle) {
-      return NULL;
-    }
-
-    while(($name = readdir($handle)) !== FALSE) {
-      if (!strncmp($name, $file, $len)) {
-        return $dir . '/' . $name;
+    foreach ($this->classes as $ext => $class) {
+      $file = "$template.$ext";
+      if (file_exists($file)) {
+        return $file;
       }
     }
-    closedir($handle);
     return NULL;
   }
 
