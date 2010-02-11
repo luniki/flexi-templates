@@ -242,7 +242,7 @@ class Flexi_TemplateFactory {
    */
   function get_extension($file) {
     $matches = array();
-    $matched = ereg('\.([^/.]+)$', $file, $matches);
+    $matched = preg_match('/\.([^\/.]+)$/', $file, $matches);
     return $matched ? $matches[1] : NULL;
   }
 
