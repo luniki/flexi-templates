@@ -21,4 +21,3 @@
 # SOFTWARE.
 
 class Flexi_TemplateNotFoundException extends Exception {}
-

@@ -46,8 +46,10 @@ class Flexi_TemplateFactory {
    *
    * @var array
    */
-  protected $classes = array('php' => 'Flexi_PhpTemplate',
-                             'pjs' => 'Flexi_JsTemplate');
+  protected $handlers = array(
+      'php' => array('Flexi_PhpTemplate', array()),
+      'pjs' => array('Flexi_JsTemplate',  array())
+  );
 
 
   /**
@@ -140,10 +142,10 @@ class Flexi_TemplateFactory {
     # get file
     $file = $this->get_template_file($template);
 
-    # retrieve class
-    $class = $this->get_template_class($file);
+    # retrieve handler
+    list($class, $options) = $this->get_template_handler($file);
 
-    return new $class($file, $this);
+    return new $class($file, $this, $options);
   }
 
 
@@ -183,18 +185,33 @@ class Flexi_TemplateFactory {
 
 
   /**
-   * Matches an extension to a template class.
+   * Matches an extension to a template handler.
    *
    * @param  string     the template
    *
-   * @return string     a string containing the class name of a matched
-   *                    extension or NULL if the extension did not match
+   * @return array      an array containing the class name and an array of
+   *                    options of the matched extension;
+   *                    or NULL if the extension did not match
    */
-  function get_template_class($template) {
+  function get_template_handler($template) {
     $extension = $this->get_extension($template);
-    return isset($this->classes[$extension])
-           ? $this->classes[$extension]
+    return isset($this->handlers[$extension])
+           ? $this->handlers[$extension]
            : NULL;
+  }
+
+
+  /**
+   * Registers a handler for templates with a matching extension.
+   *
+   * @param string  the extension of the templates to handle
+   * @param string  the name of the already loaded class
+   * @param array   optional; an array of options which is used
+   *                when constructing a new instance
+   */
+  function add_handler($extension, $class, $options = array())
+  {
+      $this->handlers[$extension] = array($class, $options);
   }
 
 
@@ -222,7 +239,7 @@ class Flexi_TemplateFactory {
    *                    containing the complete file name otherwise
    */
   function find_template($template) {
-    foreach ($this->classes as $ext => $class) {
+    foreach ($this->handlers as $ext => $handler) {
       $file = "$template.$ext";
       if (file_exists($file)) {
         return $file;

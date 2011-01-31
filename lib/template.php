@@ -37,24 +37,28 @@ abstract class Flexi_Template {
   /**
    * @ignore
    */
-  public
-    $_attributes, $_factory, $_layout, $_template;
+  public $_attributes, $_factory, $_options, $_layout, $_template;
 
 
   /**
    * Constructor
    *
-   * @param string A name of a template.
+   * @param string                 the path of the template.
+   * @param Flexi_TemplateFactory  the factory creating this template
+   * @param array                  optional array of options
    *
    * @return void
    */
-  function __construct($template, &$factory) {
+  function __construct($template, &$factory, $options = array()) {
 
     # set template
     $this->_template = $template;
 
     # set factory
     $this->_factory = $factory;
+
+    # set options
+    $this->_options = $options;
 
     # init attributes
     $this->clear_attributes();
